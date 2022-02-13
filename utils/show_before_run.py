@@ -47,8 +47,9 @@ for i, en in enumerate(en_list):
         final = torch.cat((final, final_list), axis=0)
 #########################################
 sumy = final.sum(axis=0)
-rng = np.linspace(1, x_lim, num_classes, dtype='float')
+rng = [i + 1 for i in range(num_classes)]
 plt.bar(rng, sumy)
+plt.title(f'num samples: {final.shape[0]}')
 plt.savefig('./show_figure')
 
 exit()

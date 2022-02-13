@@ -13,6 +13,7 @@ import os
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import h5py
 
 NUM_CLASSES = 1
 RAND_NUM = 0
@@ -85,7 +86,7 @@ def main(config):
             my_target = target.sum(axis=1)
             my_output = output.sum(axis=1)
             
-            my_rel_error = abs(my_target - my_output) / my_target
+            my_rel_error = abs(my_target - my_output) / my_target            
             d = {'output': my_output.cpu(), 'target': my_target.cpu(), 'rel_error': my_rel_error.cpu()}
             df = pd.DataFrame(data=d, index=range(len(my_output)))
             flag = -1
@@ -107,6 +108,9 @@ def main(config):
                 os.makedirs(my_path)
             df = df.sort_values(by=['target'])
             df.to_csv(os.path.join(my_path, "data_frame.csv"))
+            with h5py.File(os.path.join(my_path, 'data.h5'), 'w') as hf:
+                hf.create_dataset('dataset_1', data=output.cpu())
+                hf.create_dataset('dataset_2', data=target.cpu())
             plt.figure(num=0, figsize=(12, 6))
             plt.clf()
             plt.scatter(range(len(df['output'])), df['output'], label='output')
@@ -140,7 +144,7 @@ def main(config):
     #################################################################################################
     ### My evaluation function for generating histograms, images and analysing the tests results ####
     my_utils.evaluate_test(tot_out.cpu().numpy(), tot_target.cpu().numpy(), tot_idx.cpu().numpy(),
-                           tot_sums.cpu().numpy())
+                           tot_sums.cpu().numpy(), config)
     #################################################################################################
 
     n_samples = len(data_loader.sampler)

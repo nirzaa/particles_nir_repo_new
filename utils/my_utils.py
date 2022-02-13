@@ -42,8 +42,8 @@ def merge_and_split_data(path, relation, moment, min_shower_num, max_shower_num,
     # mean, std = get_mean_and_std(dataset)
     # print(mean, std)
 
-    train_d, test_d = torch.utils.data.random_split(dataset, [int(relation * len(dataset)) + 1,
-                                                              int((1 - relation) * len(dataset))])
+    train_d, test_d = torch.utils.data.random_split(dataset, [int(relation * len(dataset))+2,
+                                                              int((1 - relation) * len(dataset))-1])
 
     # torch.save(train_d, path / "train//train.pt")
     # torch.save(test_d, path / "test//test.pt")
@@ -52,7 +52,7 @@ def merge_and_split_data(path, relation, moment, min_shower_num, max_shower_num,
     torch.save(test_d, os.path.join('./', 'data', 'test', 'test.pt'))
 
 
-def test_bins(output, target, nums, bin_num=10, name=None, run_num='0'):
+def test_bins(output, target, nums, bin_num=10, name=None, run_num='0', config=0):
     """Analysis of the bin results from test"""
 
     # Generate the bins
@@ -131,6 +131,22 @@ def test_bins(output, target, nums, bin_num=10, name=None, run_num='0'):
     plt.title(f'{len(output)} samples')
     plt.legend()
     plt.savefig(os.path.join(res_path, f'binsgraph_run_{run_num}.png'))
+    flag = -1
+    try:
+        epoch_num = int(str(config.resume)[-7:-4])
+        flag = 0
+    except:
+        pass
+    if flag == -1:
+        try:
+            epoch_num = int(str(config.resume)[-6:-4])
+            flag = 0
+        except:
+            pass
+    if flag == -1:
+        epoch_num = 0
+    csv_path = os.path.join('./csv_files', f'epoch_{epoch_num}')
+    plt.savefig(os.path.join(csv_path, f'binsgraph_run_{run_num}.png'))
     # plt.show()
     plt.clf()
     save = {'output bins': total_out, 'output entropy': out_entropy,
@@ -142,7 +158,7 @@ def test_bins(output, target, nums, bin_num=10, name=None, run_num='0'):
     res_file.close()
     return
 
-def evaluate_test(output, target, incdices, shower_nums):
+def evaluate_test(output, target, incdices, shower_nums, config):
     """
         This function evaluates the test results. The first part relates to the N prediction - assuming we have 1 class.
         The second part handles the 20 bin prediction.
@@ -158,7 +174,7 @@ def evaluate_test(output, target, incdices, shower_nums):
     # H_graphs(N_true=shower_nums, N_pred=N_pred, run_num=file_tag)  # Generate relevant graph images
 
     # Bins - sum over output bins and target bins. Compare graphs. produce PNG. Save the bins as text to calculate
-    test_bins(output, target, shower_nums, bin_num=20, run_num=file_tag)
+    test_bins(output, target, shower_nums, bin_num=20, run_num=file_tag, config=config)
 
     ################################################################
     ######### Save idx list as txt file with the file tag ##########
