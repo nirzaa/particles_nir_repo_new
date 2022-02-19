@@ -22,7 +22,7 @@ if __name__ == '__main__':
     gpu_name = torch.cuda.get_device_name(0)
     print(f'We are using {gpu_name}')
     print('='*70)
-    num_runs = 10
+    num_runs = 3
     for run in range(num_runs):
         print(f'This is the {run} run')
         print('='*50)

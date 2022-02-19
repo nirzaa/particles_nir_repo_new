@@ -6,12 +6,25 @@ import matplotlib.pyplot as plt
 
 output_list = list()
 target_list = list()
-for run_num in range(4):
-    my_path = f'./csv_files/run_{run_num}'
-    for epoch_num in [50, 60]:
+with open(os.path.join('./csv_files', 'stats.txt'), 'w') as f:
+    f.write('Stats for our data\n')
+    f.write('='*40)
+    f.write('\n\n')
+for run_num in range(1):
+    my_path = f'./csv_files/1_class_2d/run_{run_num}'
+    for epoch_num in [10, 20, 30, 40, 50, 60]:
         with h5py.File(os.path.join(my_path, f'epoch_{epoch_num}', 'data.h5'), 'r') as hf:
             output = np.array(hf.get('dataset_1'))
             target = np.array(hf.get('dataset_2'))
+            rel_error = abs(output.sum()-target.sum()) / target.sum()
+            with open(os.path.join('./csv_files', 'stats.txt'), 'a+') as f:
+                f.write(f'The average results for {epoch_num} epoch\n')
+                f.write('='*50)
+                f.write(f'\nThe output average number of particles per event is: {output.mean():.2f}')
+                f.write(f'\nThe target average number of particles per event is: {target.mean():.2f}')
+                f.write(f'\nthe output N value is: {output.sum()}'
+                f'\nthe target N value is: {target.sum()}')
+                f.write(f'\nrelative error for total N: {rel_error*100:.2f}%\n\n')
         output_list.append(output)
         target_list.append(target)
 my_output = np.stack(output_list, axis=0)
@@ -39,19 +52,18 @@ plt.title(f'{len(output)} samples')
 plt.legend()
 plt.savefig(f'./csv_files/binsgraph.png')
 
-with open(os.path.join('./csv_files', 'stats.txt'), 'w') as f:
-    f.write('Stats for our data\n')
-    f.write('='*40)
-    f.write('\n\n')
+
 
 rel_error_N = abs(mean_output.sum()-mean_target.sum()) / mean_target.sum()
 t = mean_target.sum(axis=1)
 o = mean_output.sum(axis=1)
 with open(os.path.join('./csv_files', 'stats.txt'), 'a+') as f:
-    f.write(f'The output average number of particles per event is: {o.mean():.2f}\n')
-    f.write(f'The target average number of particles per event is: {t.mean():.2f}\n\n')
-    f.write(f'the output N value is: {mean_output.sum()}\n'
-    f'the target N value is: {mean_target.sum()}\n\n')
-    f.write(f'relative error for total N: {rel_error_N*100:.2f}%\n')
+    f.write(f'The average results for all the above epochs\n')
+    f.write('='*50)
+    f.write(f'\nThe output average number of particles per event is: {o.mean():.2f}')
+    f.write(f'\nThe target average number of particles per event is: {t.mean():.2f}')
+    f.write(f'\nthe output N value is: {mean_output.sum()}'
+    f'\nthe target N value is: {mean_target.sum()}')
+    f.write(f'\nrelative error for total N: {rel_error_N*100:.2f}%\n')
 
     
