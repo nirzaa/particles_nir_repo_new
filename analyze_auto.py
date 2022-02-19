@@ -2,14 +2,36 @@ import os
 import h5py
 import numpy as np
 import matplotlib.pyplot as plt
-
+import torch
+from torchsummary import summary
+# from torchinfo import summary
+from torchvision import models
+import model.model as module_arch
+import sys
+import time
 
 output_list = list()
 target_list = list()
-with open(os.path.join('./csv_files', 'stats.txt'), 'w') as f:
+print_path = os.path.join('./csv_files', 'stats.txt')
+with open(print_path, 'w') as f:
     f.write('Stats for our data\n')
     f.write('='*40)
     f.write('\n\n')
+    files_list = os.listdir(f'./saved/models/new_model/')
+    files_list.sort()
+    train_folder = files_list[0]
+    model_path = os.path.join('./saved/models/new_model', train_folder, 'model_best.pth')
+    model = torch.load(model_path)
+    x = model['config'].init_obj('arch', module_arch)
+    
+with open(print_path, "a+") as log_file:
+    sys.stdout = log_file
+    print('Model architecture')
+    print('='*40)
+    summary(x.cuda(), (1, 110, 21))
+    print('\n\nThe Results:')
+    print('='*50)
+    print()
 for run_num in range(1):
     my_path = f'./csv_files/1_class_2d/run_{run_num}'
     for epoch_num in [10, 20, 30, 40, 50, 60]:
