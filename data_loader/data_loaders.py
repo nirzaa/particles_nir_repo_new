@@ -212,6 +212,7 @@ class Bin_energy_data(Dataset):
         num_classes = int(np.array(num_classes))
         hf.close()
         bin_num = num_classes
+
         final_list = [0] * bin_num  # The 20 here is the bin number - it may be changed of course.
         bin_list = np.linspace(0, 13, bin_num)  # Generate the bin limits
         binplace = np.digitize(en_list, bin_list)  # Divide the list into bins
@@ -221,6 +222,9 @@ class Bin_energy_data(Dataset):
         n = sum(final_list)
         # final_list = [f / n for f in final_list]    # Bin Normalization by sum
         final_list = torch.Tensor(final_list)  # Wrap it in a tensor - important for training and testing.
+        
         #########################################
 
-        return d_tens, final_list, num_showers, idx
+        # final_list = torch.tensor([len(en_list)])
+
+        return d_tens.sum(axis=2), final_list, num_showers, idx

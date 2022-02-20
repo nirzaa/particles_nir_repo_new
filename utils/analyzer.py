@@ -204,7 +204,7 @@ def eigens_scattering():
 def rel_error_mean_variance():
     epoch_list = np.arange(10, 60, 10, dtype='int')
 
-    my_path = os.path.join('./', 'csv_files')
+    my_path = os.path.join('./', 'csv_files', '1_class')
     dirlist = [item for item in os.listdir(my_path) if os.path.isdir(os.path.join(my_path, item)) ]
     dirlist.sort()
     with open(os.path.join(my_path, 'stats.txt'), 'w') as f:

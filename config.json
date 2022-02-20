@@ -4,7 +4,7 @@
 
     "arch": {
         "type": "model_2d",
-        "args": {"model_type": "ResNet10", "num_classes": 1}
+        "args": {"model_type": "ResNet10", "num_classes": 20}
     },
     "data_loader": {
         "type": "data_loader",
@@ -24,7 +24,7 @@
             "amsgrad": true
         }
     },
-    "loss": "my_loss",
+    "loss": "MSE_loss",
     "metrics": [
         "bias_avg", "bias_std"
     ],
@@ -36,14 +36,14 @@
         }
     },
     "trainer": {
-        "epochs": 71,
+        "epochs": 300,
 
         "save_dir": "saved/",
         "save_period": 1,
         "verbosity": 2,
         
         "monitor": "min val_loss",
-        "early_stop": 10,
+        "early_stop": 100,
 
         "tensorboard": true
     }

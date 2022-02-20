@@ -33,8 +33,8 @@ with open(print_path, "a+") as log_file:
     print('='*50)
     print()
 for run_num in range(1):
-    my_path = f'./csv_files/1_class_2d/run_{run_num}'
-    for epoch_num in [10, 20, 30, 40, 50, 60]:
+    my_path = f'./csv_files/class_2d_epochs/run_{run_num}'
+    for epoch_num in np.linspace(10, 300, 30, dtype='int'):
         with h5py.File(os.path.join(my_path, f'epoch_{epoch_num}', 'data.h5'), 'r') as hf:
             output = np.array(hf.get('dataset_1'))
             target = np.array(hf.get('dataset_2'))
