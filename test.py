@@ -121,7 +121,12 @@ def main(config):
 
             plt.figure(num=1, figsize=(12, 6))
             plt.clf()
-            plt.scatter(range(len(df['rel_error'])), df['rel_error'], label='rel_error')
+            y_value = df['rel_error']*100
+            y_value = y_value[y_value < 2]
+            plt.scatter(range(len(y_value)), y_value, label='rel_error')
+            plt.ylabel('rel error in %')
+            plt.xlabel('events number')
+            # plt.scatter(range(len(df['rel_error'])), df['rel_error'], label='rel_error')
             plt.legend()
             plt.plot()
             plt.savefig(os.path.join(my_path, 'rel_error'))
