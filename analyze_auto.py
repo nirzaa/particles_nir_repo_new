@@ -34,15 +34,17 @@ with open(print_path, "a+") as log_file:
     print('='*50)
     print()
 for run_num in range(1):
-    my_path = f'./csv_files/class_2d_epochs_20energies/run_{run_num}'
-    for epoch_num in np.linspace(10, 300, 30, dtype='int'):
+    my_path = f'./csv_files/directN_new/run_{run_num}'
+    for epoch_num in np.linspace(10, 30, 3, dtype='int'):
         with h5py.File(os.path.join(my_path, f'epoch_{epoch_num}', 'data.h5'), 'r') as hf:
             output = np.array(hf.get('dataset_1'))
             target = np.array(hf.get('dataset_2'))
             rel_error = abs(output.sum()-target.sum()) / target.sum()
+            rel_error_per = abs(output-target) / target
             with open(os.path.join('./csv_files', 'stats.txt'), 'a+') as f:
                 f.write(f'The average results for {epoch_num} epoch\n')
                 f.write('='*50)
+                f.write(f'\nThe rel error mean for each event: {rel_error_per.mean()*100:.2f}%, std: {rel_error_per.std()*100:.2f}%')
                 f.write(f'\nThe output average number of particles per event is: {output.mean():.2f}')
                 f.write(f'\nThe target average number of particles per event is: {target.mean():.2f}')
                 f.write(f'\nthe output N value is: {output.sum()}'
