@@ -29,6 +29,7 @@ The Results:
 
 The average results for 10 epoch
 ==================================================
+The rel error mean for each event: 84.53%, std: 9.80%
 The output average number of particles per event is: 117.23
 The target average number of particles per event is: 1029.93
 the output N value is: 21101.0546875
@@ -37,6 +38,7 @@ relative error for total N: 88.62%
 
 The average results for 20 epoch
 ==================================================
+The rel error mean for each event: 16.29%, std: 17.54%
 The output average number of particles per event is: 1086.17
 The target average number of particles per event is: 1029.93
 the output N value is: 195510.65625
@@ -45,6 +47,7 @@ relative error for total N: 5.46%
 
 The average results for 30 epoch
 ==================================================
+The rel error mean for each event: 4.69%, std: 4.91%
 The output average number of particles per event is: 1032.78
 The target average number of particles per event is: 1029.93
 the output N value is: 185899.78125
