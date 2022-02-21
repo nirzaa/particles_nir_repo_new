@@ -12,6 +12,7 @@ import time
 
 output_list = list()
 target_list = list()
+rel_error_list = list()
 print_path = os.path.join('./csv_files', 'stats.txt')
 with open(print_path, 'w') as f:
     f.write('Stats for our data\n')
@@ -49,10 +50,14 @@ for run_num in range(1):
                 f.write(f'\nrelative error for total N: {rel_error*100:.2f}%\n\n')
         output_list.append(output)
         target_list.append(target)
+        rel_error_list.append(rel_error)
 my_output = np.stack(output_list, axis=0)
 my_target = np.stack(target_list, axis=0)
+my_rel_error = np.stack(rel_error_list, axis=0)
 mean_output = my_output.mean(axis=0)
 mean_target = my_target.mean(axis=0)
+my_rel_error_mean = my_rel_error.mean()
+my_rel_error_std = my_rel_error.std()
 bars = np.linspace(0, 13, mean_output.shape[1])
 bars = [float(f'{i:.2f}') for i in bars]
 text = 'Bin Energy range [GeV]: \n'
@@ -86,6 +91,6 @@ with open(os.path.join('./csv_files', 'stats.txt'), 'a+') as f:
     f.write(f'\nThe target average number of particles per event is: {t.mean():.2f}')
     f.write(f'\nthe output N value is: {mean_output.sum()}'
     f'\nthe target N value is: {mean_target.sum()}')
-    f.write(f'\nrelative error for total N: {rel_error_N*100:.2f}%\n')
+    f.write(f'\nrelative error for total N: {my_rel_error_mean*100:.2f}%, std: {my_rel_error_std*100:.2f}%\n')
 
     

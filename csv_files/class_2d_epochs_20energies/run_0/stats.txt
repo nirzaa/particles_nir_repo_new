@@ -273,4 +273,4 @@ The output average number of particles per event is: 1019.04
 The target average number of particles per event is: 1029.93
 the output N value is: 183426.5
 the target N value is: 185387.0
-relative error for total N: 1.06%
+relative error for total N: 1.06%, std: 3.73%
