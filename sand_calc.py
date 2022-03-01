@@ -21,9 +21,14 @@ def my_rel():
         df = pd.read_csv(os.path.join(my_path, f'epoch_{i}', 'data_frame.csv'))
         plt.figure()
         plt.clf()
-        plt.ylabel('relative error')
+        plt.ylabel('relative error in %')
         plt.xlabel('target value')
-        plt.scatter(df.target, df.rel_error)
+        y = df.rel_error
+        y *= 100
+        x = df.target
+        x = x[y < 2]
+        y = y[y < 2]
+        plt.scatter(x, y)
         plt.savefig(os.path.join(my_path, f'epoch_{i}', 'rel_error_fig.png'))
 
 if __name__ == '__main__':
