@@ -19,7 +19,7 @@ def my_rel():
     my_path = os.path.join('.', 'csv_files', '1class_negativeRel')
     for i in np.linspace(10, 100, 10, dtype='int'):
         df = pd.read_csv(os.path.join(my_path, f'epoch_{i}', 'data_frame.csv'))
-        plt.figure()
+        plt.figure(figsize=(12, 6))
         plt.clf()
         plt.ylabel('relative error in %')
         plt.xlabel('target value')
