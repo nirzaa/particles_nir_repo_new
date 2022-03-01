@@ -26,8 +26,6 @@ def my_rel():
         y = df.rel_error
         y *= 100
         x = df.target
-        x = x[y < 2]
-        y = y[y < 2]
         plt.scatter(x, y)
         plt.savefig(os.path.join(my_path, f'epoch_{i}', 'rel_error_fig.png'))
 
