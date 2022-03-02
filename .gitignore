@@ -5,6 +5,7 @@ __pycache__/
 
 *.mat
 signal*
+*.pt
 
 # C extensions
 *.so
