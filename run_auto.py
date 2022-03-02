@@ -17,7 +17,6 @@ def test_func(folder_name):
         print('='*50)
         os.system(f"python ./test.py --resume ./saved/models/new_model/{folder_name}/checkpoint-epoch{epoch_num}.pth --c ./config.json")
 
-
 if __name__ == '__main__':
     if torch.cuda.is_available():
         gpu_name = torch.cuda.get_device_name(0)

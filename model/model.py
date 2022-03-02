@@ -78,7 +78,7 @@ def model_2d_new(model_type, num_classes):
             self.fc1 = nn.Linear(64 * 14 * 3, 64)
             self.fc2 = nn.Linear(64, 32)
             self.fc3 = nn.Linear(32, 20)
-            self.fc3 = nn.Linear(20, 1)
+            self.fc4 = nn.Linear(20, 1)
             self.conv1 = nn.Conv2d(in_channels=1, out_channels=16, kernel_size=(2,2), stride=(2,2), padding=1,)
             self.conv2 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=(3,3), stride=(2,2), padding=1, )
             self.conv3 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=(3,3), stride=(2,2), padding=1, )
