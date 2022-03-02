@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 *.mat
+signal*
 
 # C extensions
 *.so
