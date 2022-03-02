@@ -16,7 +16,7 @@ def rely():
     f'output: {output.mean():.2f}, target: {target.mean():.2f}, rel error: {(output.mean()-target.mean())/target.mean()}')
 
 def my_rel():
-    my_path = os.path.join('.', 'csv_files', '1class_negativeRel')
+    my_path = os.path.join('.', 'csv_files', '20classes_negativeRel', 'run_1')
     for i in np.linspace(10, 100, 10, dtype='int'):
         df = pd.read_csv(os.path.join(my_path, f'epoch_{i}', 'data_frame.csv'))
         plt.figure(figsize=(12, 6))

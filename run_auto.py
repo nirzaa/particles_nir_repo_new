@@ -19,17 +19,25 @@ def test_func(folder_name):
 
 
 if __name__ == '__main__':
-    gpu_name = torch.cuda.get_device_name(0)
+    if torch.cuda.is_available():
+        gpu_name = torch.cuda.get_device_name(0)
+    else:
+        gpu_name = 'cpu'
+    
     print(f'We are using {gpu_name}')
     print('='*70)
     num_runs = 1
     for run in range(num_runs):
         print(f'This is the {run} run')
         print('='*50)
-        os.system('rm ./saved/models/new_model/* -r')
+        # os.system('rm ./saved/models/new_model/* -r')
+        os.system('rmdir ".\\saved\\models\\new_model\\"')
+        os.system('mkdir .\\saved\\models\\new_model\\')
         train_func()
         train_folder = os.listdir(f'./saved/models/new_model/')[0]
         test_func(folder_name=train_folder)
-        os.system(f'mkdir ./csv_files/run_{run}')
-        os.system(f'mv ./csv_files/epoch_* ./csv_files/run_{run}')
+        # os.system(f'mkdir ./csv_files/run_{run}')
+        # os.system(f'mv ./csv_files/epoch_* ./csv_files/run_{run}')
+        os.system(f'mkdir .\\csv_files\\run_{run}')
+        os.system(f'move .\\csv_files\\epoch_* .\\csv_files\\run_{run}')
         os.system('python ./analyze_auto.py')
