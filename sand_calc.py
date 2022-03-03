@@ -29,6 +29,8 @@ def my_rel():
         plt.scatter(x, y)
         plt.savefig(os.path.join(my_path, f'epoch_{i}', 'rel_error_fig.png'))
 
+
 if __name__ == '__main__':
     # rely()
+
     my_rel()
