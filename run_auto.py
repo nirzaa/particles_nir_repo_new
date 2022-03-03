@@ -22,8 +22,8 @@ if __name__ == '__main__':
     gpu_name = torch.cuda.get_device_name(0)
     print(f'We are using {gpu_name}')
     print('='*70)
-    num_runs = 1
-    for run in range(num_runs):
+    num_runs = 2
+    for run in range(1, num_runs):
         print(f'This is the {run} run')
         print('='*50)
         os.system('rm ./saved/models/new_model/* -r')
