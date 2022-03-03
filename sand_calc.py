@@ -30,7 +30,32 @@ def my_rel():
         plt.savefig(os.path.join(my_path, f'epoch_{i}', 'rel_error_fig.png'))
 
 
+def rel_error_table():
+    rel_mean_list = list()
+    rel_std_list = list()
+    epoch_list = list()
+    my_path = os.path.join('csv_files', '2d_1class', 'run_0')
+    for i in np.linspace(10, 100, 10):
+        if i.is_integer():
+            i = int(i)
+        print(f'Working on epoch_{i}')
+        df = pd.read_csv(os.path.join(my_path, f'epoch_{i}', 'data_frame.csv'))
+        rel_errors = df.rel_error * 100
+        rel_mean = rel_errors.mean()
+        rel_std = rel_errors.std()
+        epoch_list.append(i)
+        rel_mean_list.append(rel_mean)
+        rel_std_list.append(rel_std)
+    rel_df = pd.DataFrame(
+    {'epoch': epoch_list,
+     'mean': rel_mean_list,
+     'std': rel_std_list
+    })
+    rel_df.to_csv(os.path.join(my_path, 'rel.csv'))
+
+
 if __name__ == '__main__':
     # rely()
 
-    my_rel()
+    # my_rel()
+    rel_error_table()

@@ -86,7 +86,7 @@ def main(config):
             my_target = target.sum(axis=1)
             my_output = output.sum(axis=1)
             
-            my_rel_error = abs(my_target - my_output) / my_target            
+            my_rel_error = (my_target - my_output) / my_target            
             d = {'output': my_output.cpu(), 'target': my_target.cpu(), 'rel_error': my_rel_error.cpu()}
             df = pd.DataFrame(data=d, index=range(len(my_output)))
             flag = -1
@@ -122,7 +122,7 @@ def main(config):
             plt.figure(num=1, figsize=(12, 6))
             plt.clf()
             y_value = df['rel_error']*100
-            y_value = y_value[y_value < 2]
+            # y_value = y_value[y_value < 2]
             plt.scatter(range(len(y_value)), y_value, label='rel_error')
             plt.ylabel('rel error in %')
             plt.xlabel('events number')
