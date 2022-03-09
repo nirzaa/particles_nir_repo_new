@@ -34,7 +34,7 @@ def rel_error_table():
     rel_mean_list = list()
     rel_std_list = list()
     epoch_list = list()
-    my_path = os.path.join('csv_files', 'run_1')
+    my_path = os.path.join('csv_files', '2d_20classes', 'run_1')
     for i in np.linspace(10, 100, 10):
         if i.is_integer():
             i = int(i)
@@ -48,14 +48,48 @@ def rel_error_table():
         rel_std_list.append(rel_std)
     rel_df = pd.DataFrame(
     {'epoch': epoch_list,
+     'mean[%]': rel_mean_list,
+     'std[%]': rel_std_list
+    })
+    rel_df.to_csv(os.path.join(my_path, 'rel.csv'))
+
+def rel_error_table_nonormal():
+    rel_mean_list = list()
+    rel_std_list = list()
+    epoch_list = list()
+    my_path = os.path.join('csv_files', 'run_1')
+    for i in np.linspace(10, 100, 10):
+        if i.is_integer():
+            i = int(i)
+        print(f'Working on epoch_{i}')
+        df = pd.read_csv(os.path.join(my_path, f'epoch_{i}', 'data_frame.csv'))
+        target = df.target
+        output = df.output
+        rel_mean = ((target - output)/1).mean()
+        rel_std = ((target - output)/1).std()
+        epoch_list.append(i)
+        rel_mean_list.append(rel_mean)
+        rel_std_list.append(rel_std)
+    rel_df = pd.DataFrame(
+    {'epoch': epoch_list,
      'mean': rel_mean_list,
      'std': rel_std_list
     })
-    rel_df.to_csv(os.path.join(my_path, 'rel.csv'))
+    rel_df.to_csv(os.path.join(my_path, 'rel_nonormal.csv'))
+    plt.figure(num=0, figsize=(12, 6))
+    plt.clf()
+    plt.title('error as a function of epoch')
+    plt.ylabel('rel error: target - output')
+    plt.xlabel('epoch')
+    plt.errorbar(epoch_list, rel_mean_list, yerr=rel_std_list)
+    plt.savefig(os.path.join(my_path, 'rel_nonormal'))
+  
+
 
 
 if __name__ == '__main__':
     # rely()
 
     # my_rel()
-    rel_error_table()
+    # rel_error_table()
+    rel_error_table_nonormal()

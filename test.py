@@ -14,6 +14,12 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import h5py
+import numpy as np
+from scipy.optimize import curve_fit
+
+def Gauss(x, A, B):
+    y = A*np.exp(-1*B*x**2)
+    return y
 
 NUM_CLASSES = 1
 RAND_NUM = 0
@@ -117,6 +123,8 @@ def main(config):
             plt.scatter(range(len(df['target'])), df['target'], label='target')
             plt.legend()
             plt.plot()
+            chi_squared = ((df['output'] - df['target'])**2 / df['target']).mean()
+            plt.title(f'Chi squared is: {chi_squared:.2f}')
             plt.savefig(os.path.join(my_path, 'output_target'))
 
             plt.figure(num=1, figsize=(12, 6))
@@ -124,12 +132,32 @@ def main(config):
             y_value = df['rel_error']*100
             # y_value = y_value[y_value < 2]
             plt.scatter(range(len(y_value)), y_value, label='rel_error')
+            
+            parameters, covariance = curve_fit(Gauss, np.array(range(len(y_value))), y_value)
+            plt.plot(range(len(y_value)), Gauss(np.array(range(len(y_value))), parameters[0], parameters[1]), label='Gauss distribution')
             plt.ylabel('rel error in %')
             plt.xlabel('events number')
             # plt.scatter(range(len(df['rel_error'])), df['rel_error'], label='rel_error')
             plt.legend()
             plt.plot()
+            plt.title('rel error')
             plt.savefig(os.path.join(my_path, 'rel_error'))
+
+            plt.figure(num=2, figsize=(12, 6))
+            plt.clf()
+            y_value = my_target - my_output
+            # y_value = y_value[y_value < 2]
+            plt.scatter(range(len(y_value)), y_value.cpu(), label='rel_error no normalization')
+            
+            parameters, covariance = curve_fit(Gauss, np.array(range(len(y_value))), y_value.cpu())
+            plt.plot(range(len(y_value)), Gauss(np.array(range(len(y_value))), parameters[0], parameters[1]), label='Gauss distribution')
+            plt.ylabel('rel error : (target - output)')
+            plt.xlabel('events number')
+            # plt.scatter(range(len(df['rel_error'])), df['rel_error'], label='rel_error')
+            plt.legend()
+            plt.plot()
+            plt.title('rel error - no normalization')
+            plt.savefig(os.path.join(my_path, 'rel_error_no_normal'))
             
             loss = loss_fn(output, target)
             bias = output - target

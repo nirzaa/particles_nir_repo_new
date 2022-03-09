@@ -1,7 +1,7 @@
 import random
 from collections import Counter
 from pathlib import Path
-
+from scipy.io import loadmat  
 import numpy as np
 import torch
 from torch.utils.data import Dataset
@@ -55,10 +55,12 @@ class Bin_energy_data(Dataset):
                  Also returns the num_showers and idx parameter for test purposes.
     """
 
-    def __init__(self, en_dep_file, en_file, moment=1, min_shower_num=0, max_shower_num=10000, file=0):
+    def __init__(self, en_dep_file, en_file, moment=1, min_shower_num=0, max_shower_num=10000, file=0, noise_file=None):
 
         self.en_dep = EcalDataIO.ecalmatio(en_dep_file)  # Dict with 100000 samples {(Z,X,Y):energy_stamp}
         self.energies = EcalDataIO.energymatio(en_file)
+        if noise_file is not None:
+            self.en_dep_noise = loadmat(noise_file)['0']
         # self.energies = EcalDataIO.xymatio(en_file)
 
         self.moment = moment
@@ -163,6 +165,13 @@ class Bin_energy_data(Dataset):
         for z, x, y in tmp:
             d_tens[x, y, z] = tmp[(z, x, y)]
         d_tens = d_tens.unsqueeze(0)  # Only in conv3d
+
+        en_dep_noise = torch.zeros((110, 11, 21))
+        for i in range(en_dep_noise.shape[0]):
+            for j in range(en_dep_noise.shape[1]):
+                for k in range(en_dep_noise.shape[2]):
+                    en_dep_noise[i,j,k] = self.en_dep_noise[k,i,j]
+        d_tens += en_dep_noise
 
         en_list = torch.Tensor(self.energies[key])
         num_showers = len(en_list)

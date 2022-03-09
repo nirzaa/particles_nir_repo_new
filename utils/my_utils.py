@@ -31,10 +31,11 @@ def merge_and_split_data(path, relation, moment, min_shower_num, max_shower_num,
         # en_file = path / "raw" / f"signal.al.elaser.IP0{i}.energy.mat"
 
         edep_file = os.path.join('./', 'data', 'raw', f'signal.al.elaser.IP0{i}.edeplist.mat')
+        edep_file_noise = os.path.join('./', 'data', 'raw', 'fast.elaser_randomised_bg')
         en_file = os.path.join('./', 'data', 'raw', f'signal.al.elaser.IP0{i}.energy.mat')
 
         dataset = Bin_energy_data(edep_file, en_file, moment=moment,
-                                  min_shower_num=min_shower_num, max_shower_num=max_shower_num, file=i)
+                                  min_shower_num=min_shower_num, max_shower_num=max_shower_num, file=i, noise_file=edep_file_noise)
         dl.append(dataset)
 
     dataset = torch.utils.data.ConcatDataset(dl)
