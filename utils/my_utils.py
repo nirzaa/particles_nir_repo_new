@@ -164,7 +164,9 @@ def evaluate_test(output, target, incdices, shower_nums, config):
         This function evaluates the test results. The first part relates to the N prediction - assuming we have 1 class.
         The second part handles the 20 bin prediction.
     """
-    file_tag = "x_pred"
+    with h5py.File(os.path.join('./', 'run_num.h5'), 'r') as f:
+        run_num = int(np.array(f.get('mydataset')))
+    file_tag = str(run_num)
 
     # evaluate_xy(output=output[:, 0], target=target[:, 0], run_num=file_tag)
     # np.savetxt(res_path / f'output_{file_tag}.txt', output[:, 0], delimiter="\n", fmt='%1.2f')

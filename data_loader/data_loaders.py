@@ -5,7 +5,7 @@ from scipy.io import loadmat
 import numpy as np
 import torch
 from torch.utils.data import Dataset
-
+import matplotlib.pyplot as plt
 from base import BaseDataLoader
 from data_loader import EcalDataIO
 
@@ -171,7 +171,17 @@ class Bin_energy_data(Dataset):
             for j in range(en_dep_noise.shape[1]):
                 for k in range(en_dep_noise.shape[2]):
                     en_dep_noise[i,j,k] = self.en_dep_noise[k,i,j]
+        # plt.figure(num=0, figsize=(12, 6))
+        # plt.clf()
+        # plt.imshow(d_tens.sum(axis=2).squeeze(axis=0), interpolation="nearest", origin="upper", aspect="auto")
+        # plt.colorbar()
+        # plt.savefig('without_noise')
         d_tens += en_dep_noise
+        # plt.figure(num=0, figsize=(12, 6))
+        # plt.clf()
+        # plt.imshow(d_tens.sum(axis=2).squeeze(axis=0), interpolation="nearest", origin="upper", aspect="auto")
+        # plt.colorbar()
+        # plt.savefig('with_noise')
 
         en_list = torch.Tensor(self.energies[key])
         num_showers = len(en_list)
