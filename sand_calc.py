@@ -1,3 +1,4 @@
+from black import out
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -103,6 +104,24 @@ def show_noise():
     plt.savefig('show_noise')
     return None
 
+def excel_maker():
+    run = 0
+    df_dict_output = dict()
+    df_dict_target = dict()
+    for run in [0,1,2]:
+        with open(os.path.join('saved','diff_run_res',f'bin_results_run_{run}.txt'), 'r') as f:
+            lines = f.readlines()
+            output = lines[0].split('[')[1].split()[:20]
+            output = [float(x[:-2]) for x in output]
+            target = lines[0].split('[')[2].split()[:20]
+            target = [float(x[:-2]) for x in target]
+            df_dict_output[f'{run}'] = output
+            df_dict_target[f'{run}'] = target
+        df_output = pd.DataFrame(data=df_dict_output)
+        df_target = pd.DataFrame(data=df_dict_target)
+    df_output.to_csv(os.path.join('csv_files', 'output.csv'))
+    df_target.to_csv(os.path.join('csv_files', 'target.csv'))
+    return None
 
 if __name__ == '__main__':
     # rely()
