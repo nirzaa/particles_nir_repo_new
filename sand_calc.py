@@ -131,7 +131,4 @@ if __name__ == '__main__':
 
     # rel_error_table_nonormal()
 
-    # show_noise()
-
-    excel_maker()
-
+    show_noise()
