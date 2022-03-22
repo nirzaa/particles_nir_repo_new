@@ -5,7 +5,7 @@ from scipy.io import loadmat
 import numpy as np
 import torch
 from torch.utils.data import Dataset
-
+import matplotlib.pyplot as plt
 from base import BaseDataLoader
 from data_loader import EcalDataIO
 
@@ -60,7 +60,7 @@ class Bin_energy_data(Dataset):
         self.en_dep = EcalDataIO.ecalmatio(en_dep_file)  # Dict with 100000 samples {(Z,X,Y):energy_stamp}
         self.energies = EcalDataIO.energymatio(en_file)
         if noise_file is not None:
-            self.en_dep_noise = loadmat(noise_file)['0']
+            self.en_dep_noise = loadmat(noise_file)
         # self.energies = EcalDataIO.xymatio(en_file)
 
         self.moment = moment
@@ -166,12 +166,24 @@ class Bin_energy_data(Dataset):
             d_tens[x, y, z] = tmp[(z, x, y)]
         d_tens = d_tens.unsqueeze(0)  # Only in conv3d
 
+        key_noise = str(np.random.random_integers(999))
+
         en_dep_noise = torch.zeros((110, 11, 21))
         for i in range(en_dep_noise.shape[0]):
             for j in range(en_dep_noise.shape[1]):
                 for k in range(en_dep_noise.shape[2]):
-                    en_dep_noise[i,j,k] = self.en_dep_noise[k,i,j]
-        d_tens += en_dep_noise
+                    en_dep_noise[i,j,k] = self.en_dep_noise[key_noise][k,i,j]
+        # plt.figure(num=0, figsize=(12, 6))
+        # plt.clf()
+        # plt.imshow(d_tens.sum(axis=2).squeeze(axis=0), interpolation="nearest", origin="upper", aspect="auto")
+        # plt.colorbar()
+        # plt.savefig('without_noise')
+        # d_tens += en_dep_noise
+        # plt.figure(num=0, figsize=(12, 6))
+        # plt.clf()
+        # plt.imshow(en_dep_noise.sum(axis=2).squeeze(axis=0), interpolation="nearest", origin="upper", aspect="auto")
+        # plt.colorbar()
+        # plt.savefig('with_noise')
 
         en_list = torch.Tensor(self.energies[key])
         num_showers = len(en_list)
