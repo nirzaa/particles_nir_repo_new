@@ -29,7 +29,8 @@ with open(print_path, "a+") as log_file:
     sys.stdout = log_file
     print('Model architecture')
     print('='*40)
-    summary(x.cuda(), (1, 110, 21))
+    # summary(x.cuda(), (1, 110, 21))
+    print(model)
     print('\n\nThe Results:')
     print('='*50)
     print()
