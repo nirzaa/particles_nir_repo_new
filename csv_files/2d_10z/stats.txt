@@ -1,0 +1,275 @@
+Stats for our data
+========================================
+
+Model architecture
+========================================
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1           [-1, 16, 56, 11]              80
+            Conv2d-2            [-1, 32, 29, 6]           2,080
+            Linear-3                   [-1, 64]         237,632
+            Linear-4                   [-1, 32]           2,080
+            Linear-5                   [-1, 20]             660
+================================================================
+Total params: 242,532
+Trainable params: 242,532
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.12
+Params size (MB): 0.93
+Estimated Total Size (MB): 1.05
+----------------------------------------------------------------
+
+
+The Results:
+==================================================
+
+The average results for 10 epoch
+==================================================
+The output average number of particles per event is: 57.17
+The target average number of particles per event is: 53.18
+the output N value is: 205827.78125
+the target N value is: 191432.0
+relative error for total N: 7.52%
+
+The average results for 20 epoch
+==================================================
+The output average number of particles per event is: 53.49
+The target average number of particles per event is: 53.18
+the output N value is: 192570.6875
+the target N value is: 191432.0
+relative error for total N: 0.59%
+
+The average results for 30 epoch
+==================================================
+The output average number of particles per event is: 53.40
+The target average number of particles per event is: 53.18
+the output N value is: 192227.046875
+the target N value is: 191432.0
+relative error for total N: 0.42%
+
+The average results for 40 epoch
+==================================================
+The output average number of particles per event is: 53.42
+The target average number of particles per event is: 53.18
+the output N value is: 192297.40625
+the target N value is: 191432.0
+relative error for total N: 0.45%
+
+The average results for 50 epoch
+==================================================
+The output average number of particles per event is: 53.48
+The target average number of particles per event is: 53.18
+the output N value is: 192539.6875
+the target N value is: 191432.0
+relative error for total N: 0.58%
+
+The average results for 60 epoch
+==================================================
+The output average number of particles per event is: 53.53
+The target average number of particles per event is: 53.18
+the output N value is: 192698.125
+the target N value is: 191432.0
+relative error for total N: 0.66%
+
+The average results for 70 epoch
+==================================================
+The output average number of particles per event is: 53.45
+The target average number of particles per event is: 53.18
+the output N value is: 192416.609375
+the target N value is: 191432.0
+relative error for total N: 0.51%
+
+The average results for 80 epoch
+==================================================
+The output average number of particles per event is: 53.45
+The target average number of particles per event is: 53.18
+the output N value is: 192415.71875
+the target N value is: 191432.0
+relative error for total N: 0.51%
+
+The average results for 90 epoch
+==================================================
+The output average number of particles per event is: 53.45
+The target average number of particles per event is: 53.18
+the output N value is: 192417.90625
+the target N value is: 191432.0
+relative error for total N: 0.52%
+
+The average results for 100 epoch
+==================================================
+The output average number of particles per event is: 53.45
+The target average number of particles per event is: 53.18
+the output N value is: 192415.375
+the target N value is: 191432.0
+relative error for total N: 0.51%
+
+The average results for 10 epoch
+==================================================
+The output average number of particles per event is: 52.85
+The target average number of particles per event is: 55.41
+the output N value is: 190275.0625
+the target N value is: 199468.0
+relative error for total N: -4.61%
+
+The average results for 20 epoch
+==================================================
+The output average number of particles per event is: 55.99
+The target average number of particles per event is: 55.41
+the output N value is: 201578.21875
+the target N value is: 199468.0
+relative error for total N: 1.06%
+
+The average results for 30 epoch
+==================================================
+The output average number of particles per event is: 55.18
+The target average number of particles per event is: 55.41
+the output N value is: 198659.65625
+the target N value is: 199468.0
+relative error for total N: -0.41%
+
+The average results for 40 epoch
+==================================================
+The output average number of particles per event is: 55.28
+The target average number of particles per event is: 55.41
+the output N value is: 198998.5
+the target N value is: 199468.0
+relative error for total N: -0.24%
+
+The average results for 50 epoch
+==================================================
+The output average number of particles per event is: 55.18
+The target average number of particles per event is: 55.41
+the output N value is: 198644.203125
+the target N value is: 199468.0
+relative error for total N: -0.41%
+
+The average results for 60 epoch
+==================================================
+The output average number of particles per event is: 55.22
+The target average number of particles per event is: 55.41
+the output N value is: 198793.65625
+the target N value is: 199468.0
+relative error for total N: -0.34%
+
+The average results for 70 epoch
+==================================================
+The output average number of particles per event is: 55.22
+The target average number of particles per event is: 55.41
+the output N value is: 198792.515625
+the target N value is: 199468.0
+relative error for total N: -0.34%
+
+The average results for 80 epoch
+==================================================
+The output average number of particles per event is: 55.23
+The target average number of particles per event is: 55.41
+the output N value is: 198844.1875
+the target N value is: 199468.0
+relative error for total N: -0.31%
+
+The average results for 90 epoch
+==================================================
+The output average number of particles per event is: 55.24
+The target average number of particles per event is: 55.41
+the output N value is: 198851.03125
+the target N value is: 199468.0
+relative error for total N: -0.31%
+
+The average results for 100 epoch
+==================================================
+The output average number of particles per event is: 55.23
+The target average number of particles per event is: 55.41
+the output N value is: 198842.234375
+the target N value is: 199468.0
+relative error for total N: -0.31%
+
+The average results for 10 epoch
+==================================================
+The output average number of particles per event is: 52.77
+The target average number of particles per event is: 49.67
+the output N value is: 189959.953125
+the target N value is: 178818.0
+relative error for total N: 6.23%
+
+The average results for 20 epoch
+==================================================
+The output average number of particles per event is: 50.22
+The target average number of particles per event is: 49.67
+the output N value is: 180799.671875
+the target N value is: 178818.0
+relative error for total N: 1.11%
+
+The average results for 30 epoch
+==================================================
+The output average number of particles per event is: 49.30
+The target average number of particles per event is: 49.67
+the output N value is: 177463.84375
+the target N value is: 178818.0
+relative error for total N: -0.76%
+
+The average results for 40 epoch
+==================================================
+The output average number of particles per event is: 49.17
+The target average number of particles per event is: 49.67
+the output N value is: 176998.53125
+the target N value is: 178818.0
+relative error for total N: -1.02%
+
+The average results for 50 epoch
+==================================================
+The output average number of particles per event is: 49.22
+The target average number of particles per event is: 49.67
+the output N value is: 177194.21875
+the target N value is: 178818.0
+relative error for total N: -0.91%
+
+The average results for 60 epoch
+==================================================
+The output average number of particles per event is: 49.28
+The target average number of particles per event is: 49.67
+the output N value is: 177394.390625
+the target N value is: 178818.0
+relative error for total N: -0.80%
+
+The average results for 70 epoch
+==================================================
+The output average number of particles per event is: 49.26
+The target average number of particles per event is: 49.67
+the output N value is: 177349.28125
+the target N value is: 178818.0
+relative error for total N: -0.82%
+
+The average results for 80 epoch
+==================================================
+The output average number of particles per event is: 49.27
+The target average number of particles per event is: 49.67
+the output N value is: 177375.703125
+the target N value is: 178818.0
+relative error for total N: -0.81%
+
+The average results for 90 epoch
+==================================================
+The output average number of particles per event is: 49.26
+The target average number of particles per event is: 49.67
+the output N value is: 177337.09375
+the target N value is: 178818.0
+relative error for total N: -0.83%
+
+The average results for 100 epoch
+==================================================
+The output average number of particles per event is: 49.26
+The target average number of particles per event is: 49.67
+the output N value is: 177334.25
+the target N value is: 178818.0
+relative error for total N: -0.83%
+
+The average results for all the above epochs
+==================================================
+The output average number of particles per event is: 1057.28
+The target average number of particles per event is: 1055.03
+the output N value is: 190310.421875
+the target N value is: 189906.0
+relative error for total N: 0.22%, std: 2.06%
