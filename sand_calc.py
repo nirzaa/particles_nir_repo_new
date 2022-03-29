@@ -56,13 +56,19 @@ def rel_error_table():
     })
     rel_df.to_csv(os.path.join(my_path, 'rel.csv'))
 
-def rel_error_table_nonormal():
-    rel_mean_list = list()
-    rel_std_list = list()
-    epoch_list = list()
-    num_runs = 10
+def rel_error_table_nonormal(folder_name, num_runs):
+    
+    num_runs = num_runs
+    rel_mean_runs = list()
+    rel_std_runs = list()
     for run in range(num_runs):
-        my_path = os.path.join('csv_files', f'run_{run}')
+        rel_mean_list = list()
+        rel_std_list = list()
+        epoch_list = list()
+        print(f'Working on run {run}')
+        print('='*30)
+        saved_path = os.path.join('csv_files', f'{folder_name}')
+        my_path = os.path.join('csv_files', f'{folder_name}', f'run_{run}')
         for i in np.linspace(10, 100, 10):
             if i.is_integer():
                 i = int(i)
@@ -75,19 +81,25 @@ def rel_error_table_nonormal():
             epoch_list.append(i)
             rel_mean_list.append(rel_mean)
             rel_std_list.append(rel_std)
-        rel_df = pd.DataFrame(
-        {'epoch': epoch_list,
-        'mean': rel_mean_list,
-        'std': rel_std_list
-        })
-        rel_df.to_csv(os.path.join(my_path, 'rel_nonormal.csv'))
-        plt.figure(num=0, figsize=(12, 6))
-        plt.clf()
-        plt.title('error as a function of epoch')
-        plt.ylabel('rel error: target - output')
-        plt.xlabel('epoch')
-        plt.errorbar(epoch_list, rel_mean_list, yerr=rel_std_list)
-        plt.savefig(os.path.join(my_path, 'rel_nonormal'))
+        rel_mean_runs.append(rel_mean_list)
+        rel_std_runs.append(rel_std_list)
+    rel_mean_runs = np.array(rel_mean_runs)
+    rel_mean_runs = np.stack(rel_mean_runs, axis=0).mean(axis=0)
+    rel_std_runs = np.array(rel_std_runs)
+    rel_std_runs = np.stack(rel_std_runs, axis=0).mean(axis=0)
+    rel_df = pd.DataFrame(
+    {'epoch': epoch_list,
+    'mean': rel_mean_runs,
+    'std': rel_std_runs
+    })
+    rel_df.to_csv(os.path.join(saved_path, 'rel_nonormal.csv'))
+    plt.figure(num=0, figsize=(12, 6))
+    plt.clf()
+    plt.title('error as a function of epoch')
+    plt.ylabel('rel error: target - output')
+    plt.xlabel('epoch')
+    plt.errorbar(epoch_list, rel_mean_runs, yerr=rel_std_runs)
+    plt.savefig(os.path.join(saved_path, 'rel_nonormal'))
   
 def show_noise():
     noise_file = os.path.join('./', 'data', 'raw', 'fast.elaser_randomised_bg')
@@ -105,10 +117,9 @@ def show_noise():
     return None
 
 def excel_maker():
-    run = 0
     df_dict_output = dict()
     df_dict_target = dict()
-    for run in [0,1,2]:
+    for run in np.linspace(0, 2, 3, dtype='int'):
         with open(os.path.join('saved','diff_run_res',f'bin_results_run_{run}.txt'), 'r') as f:
             lines = f.readlines()
             output = lines[0].split('[')[1].split()[:20]
@@ -131,4 +142,8 @@ if __name__ == '__main__':
 
     # rel_error_table_nonormal()
 
-    show_noise()
+    # show_noise()
+
+    rel_error_table_nonormal(folder_name='2d_10z', num_runs=3)
+    excel_maker()
+

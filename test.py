@@ -129,7 +129,9 @@ def main(config):
 
             plt.figure(num=1, figsize=(12, 6))
             plt.clf()
-            y_value = df['rel_error']*100
+            # y_value = df['rel_error']*100
+            y_value = ((my_target - my_output) / my_target) * 100
+            y_value = y_value.cpu()
             # y_value = y_value[y_value < 2]
             plt.scatter(range(len(y_value)), y_value, label='rel_error')
             

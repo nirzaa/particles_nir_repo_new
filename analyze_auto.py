@@ -34,13 +34,13 @@ with open(print_path, "a+") as log_file:
     print('\n\nThe Results:')
     print('='*50)
     print()
-for run_num in range(1):
-    my_path = f'./csv_files/class_2d_epochs_20energies/run_{run_num}'
-    for epoch_num in np.linspace(10, 300, 30, dtype='int'):
+for run_num in range(3):
+    my_path = f'./csv_files/2d_3z/run_{run_num}'
+    for epoch_num in np.linspace(10, 100, 10, dtype='int'):
         with h5py.File(os.path.join(my_path, f'epoch_{epoch_num}', 'data.h5'), 'r') as hf:
             output = np.array(hf.get('dataset_1'))
             target = np.array(hf.get('dataset_2'))
-            rel_error = abs(output.sum()-target.sum()) / target.sum()
+            rel_error = (output.sum()-target.sum()) / target.sum()
             with open(os.path.join('./csv_files', 'stats.txt'), 'a+') as f:
                 f.write(f'The average results for {epoch_num} epoch\n')
                 f.write('='*50)
@@ -82,7 +82,7 @@ plt.savefig(f'./csv_files/binsgraph.png')
 
 
 
-rel_error_N = abs(mean_output.sum()-mean_target.sum()) / mean_target.sum()
+rel_error_N = (mean_output.sum()-mean_target.sum()) / mean_target.sum()
 t = mean_target.sum(axis=1)
 o = mean_output.sum(axis=1)
 with open(os.path.join('./csv_files', 'stats.txt'), 'a+') as f:

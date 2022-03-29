@@ -1,6 +1,8 @@
 import os
 import re
 import torch
+import h5py
+import numpy as np
 
 def train_func():
     os.system('python ./train.py --config ./config.json')
@@ -22,8 +24,17 @@ if __name__ == '__main__':
     gpu_name = torch.cuda.get_device_name(0)
     print(f'We are using {gpu_name}')
     print('='*70)
-    num_runs = 2
-    for run in range(1, num_runs):
+    num_runs = 3
+    for run in range(num_runs):
+        with h5py.File(os.path.join('./', 'run_num.h5'), 'w') as f:
+            dset = f.create_dataset("mydataset", data=run, dtype='int')
+        # fix random seeds for reproducibility
+        SEED = run
+        torch.manual_seed(SEED)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+        np.random.seed(SEED)
+        os.system('python ./utils/my_utils.py')
         print(f'This is the {run} run')
         print('='*50)
         os.system('rm ./saved/models/new_model/* -r')
