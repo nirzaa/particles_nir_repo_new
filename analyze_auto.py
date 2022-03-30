@@ -3,14 +3,15 @@ import h5py
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
-from torchsummary import summary
-# from torchinfo import summary
+# from torchsummary import summary
+from torchinfo import summary
 from torchvision import models
 import model.model as module_arch
 import sys
 import time
+from model import model
 
-def analyze(input_shape, num_runs):
+def analyze(model, input_shape, num_runs):
 
     output_list = list()
     target_list = list()
@@ -23,15 +24,12 @@ def analyze(input_shape, num_runs):
         files_list = os.listdir(f'./saved/models/new_model/')
         files_list.sort()
         train_folder = files_list[0]
-        model_path = os.path.join('./saved/models/new_model', train_folder, 'model_best.pth')
-        model = torch.load(model_path)
-        x = model['config'].init_obj('arch', module_arch)
         
     with open(print_path, "a+") as log_file:
         sys.stdout = log_file
         print('Model architecture')
         print('='*40)
-        summary(x.cuda(), input_shape)
+        summary(model, input_size=input_shape, col_names=('input_size', 'output_size'))
         print('\n\nThe Results:')
         print('='*50)
         print()
@@ -97,4 +95,5 @@ def analyze(input_shape, num_runs):
 
 
 if __name__ == '__main__':
-    analyze(input_shape=(1,110,1), num_runs=3)
+    model = model.model_2d_10(model_type=None, num_classes=None)
+    analyze(model, input_shape=(128,1,110,10), num_runs=3)
