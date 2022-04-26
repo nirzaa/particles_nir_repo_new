@@ -8,11 +8,14 @@ import numpy as np
 import torch
 from scipy.io import loadmat
 import h5py
+import pandas as pd
+import random
 # from scipy.optimize import curve_fit
 
 my_path = os.path.join('./')
 sys.path.append(my_path)
 from data_loader.data_loaders import Bin_energy_data
+
 
 
 project_path = Path(__file__).parent.parent
@@ -31,10 +34,11 @@ def merge_and_split_data(path, relation, moment, min_shower_num, max_shower_num,
         # en_file = path / "raw" / f"signal.al.elaser.IP0{i}.energy.mat"
 
         edep_file = os.path.join('./', 'data', 'raw', f'signal.al.elaser.IP0{i}.edeplist.mat')
+        edep_file_noise = os.path.join('./', 'data', 'raw', 'fast.elaser_randomised_bg')
         en_file = os.path.join('./', 'data', 'raw', f'signal.al.elaser.IP0{i}.energy.mat')
 
         dataset = Bin_energy_data(edep_file, en_file, moment=moment,
-                                  min_shower_num=min_shower_num, max_shower_num=max_shower_num, file=i)
+                                  min_shower_num=min_shower_num, max_shower_num=max_shower_num, file=i, noise_file=edep_file_noise)
         dl.append(dataset)
 
     dataset = torch.utils.data.ConcatDataset(dl)
@@ -74,6 +78,7 @@ def test_bins(output, target, nums, bin_num=10, name=None, run_num='0', config=0
         target_sum = sum(t[i] for t in target)
         total_out[i] = out_sum
         total_target[i] = target_sum
+    
 
     # Calculate the entropy of the bin lists for output and the truelabel bins.
 
@@ -147,6 +152,10 @@ def test_bins(output, target, nums, bin_num=10, name=None, run_num='0', config=0
         epoch_num = 0
     csv_path = os.path.join('./csv_files', f'epoch_{epoch_num}')
     plt.savefig(os.path.join(csv_path, f'binsgraph_run_{run_num}.png'))
+
+    np.savetxt(os.path.join(csv_path, 'hist_output.csv'), output, delimiter=',')
+    np.savetxt(os.path.join(csv_path, 'hist_target.csv'), target, delimiter=',')
+
     # plt.show()
     plt.clf()
     save = {'output bins': total_out, 'output entropy': out_entropy,
@@ -163,7 +172,9 @@ def evaluate_test(output, target, incdices, shower_nums, config):
         This function evaluates the test results. The first part relates to the N prediction - assuming we have 1 class.
         The second part handles the 20 bin prediction.
     """
-    file_tag = "x_pred"
+    with h5py.File(os.path.join('./', 'run_num.h5'), 'r') as f:
+        run_num = int(np.array(f.get('mydataset')))
+    file_tag = str(run_num)
 
     # evaluate_xy(output=output[:, 0], target=target[:, 0], run_num=file_tag)
     # np.savetxt(res_path / f'output_{file_tag}.txt', output[:, 0], delimiter="\n", fmt='%1.2f')
@@ -186,7 +197,14 @@ def evaluate_test(output, target, incdices, shower_nums, config):
 if __name__ == '__main__':
     # EDA("C:\\Users\\elihu\\PycharmProjects\\LUXE\\nongitdata\\Multiple Energies\\")
     # data_path = Path("C:\\Users\\elihu\\PycharmProjects\\LUXE\\LUXE-project-master\\data\\")
-
+    with open('./run.txt', 'r') as f:
+        run = int(f.read())
+    SEED = run
+    torch.manual_seed(SEED)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    np.random.seed(SEED)
+    random.seed(SEED)
     data_path = Path(my_path = os.path.join('./', 'data'))
     merge_and_split_data(data_path, 0.8, moment=3, min_shower_num=1, max_shower_num=50000, file=[3])
     exit()

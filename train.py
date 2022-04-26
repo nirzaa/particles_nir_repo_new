@@ -11,13 +11,23 @@ from trainer import Trainer
 from utils import prepare_device
 import h5py
 import os
+import random
 
-# fix random seeds for reproducibility
-SEED = 123
-torch.manual_seed(SEED)
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
-np.random.seed(SEED)
+with h5py.File(os.path.join('./', 'run_num.h5'), 'r') as f:
+        run_num = int(np.array(f.get('mydataset')))
+# # fix random seeds for reproducibility
+# SEED = run_num
+# torch.manual_seed(SEED)
+# torch.backends.cudnn.deterministic = True
+# torch.backends.cudnn.benchmark = False
+# np.random.seed(SEED)
+
+# # fix random seeds for reproducibility
+# SEED = 123
+# torch.manual_seed(SEED)
+# torch.backends.cudnn.deterministic = True
+# torch.backends.cudnn.benchmark = False
+# np.random.seed(SEED)
 
 def main(config):
     logger = config.get_logger('train')
@@ -56,8 +66,15 @@ def main(config):
 
 
 if __name__ == '__main__':
-
-    num_classes = 20
+    with open('./run.txt', 'r') as f:
+        run = int(f.read())
+    SEED = run
+    torch.manual_seed(SEED)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    np.random.seed(SEED)
+    random.seed(SEED)
+    num_classes = 110
 
     args = argparse.ArgumentParser(description='PyTorch Template')
     args.add_argument('-c', '--config', default=None, type=str,

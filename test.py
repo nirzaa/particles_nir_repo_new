@@ -14,6 +14,13 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import h5py
+import numpy as np
+from scipy.optimize import curve_fit
+import random
+
+def Gauss(x, A, B):
+    y = A*np.exp(-1*B*x**2)
+    return y
 
 NUM_CLASSES = 1
 RAND_NUM = 0
@@ -86,7 +93,7 @@ def main(config):
             my_target = target.sum(axis=1)
             my_output = output.sum(axis=1)
             
-            my_rel_error = abs(my_target - my_output) / my_target            
+            my_rel_error = (my_target - my_output) / my_target            
             d = {'output': my_output.cpu(), 'target': my_target.cpu(), 'rel_error': my_rel_error.cpu()}
             df = pd.DataFrame(data=d, index=range(len(my_output)))
             flag = -1
@@ -117,14 +124,43 @@ def main(config):
             plt.scatter(range(len(df['target'])), df['target'], label='target')
             plt.legend()
             plt.plot()
+            chi_squared = ((df['output'] - df['target'])**2 / df['target']).mean()
+            plt.title(f'Chi squared is: {chi_squared:.2f}')
             plt.savefig(os.path.join(my_path, 'output_target'))
 
             plt.figure(num=1, figsize=(12, 6))
             plt.clf()
-            plt.scatter(range(len(df['rel_error'])), df['rel_error'], label='rel_error')
+            # y_value = df['rel_error']*100
+            y_value = ((my_target - my_output) / my_target) * 100
+            y_value = y_value.cpu()
+            # y_value = y_value[y_value < 2]
+            plt.scatter(range(len(y_value)), y_value, label='rel_error')
+            
+            parameters, covariance = curve_fit(Gauss, np.array(range(len(y_value))), y_value)
+            plt.plot(range(len(y_value)), Gauss(np.array(range(len(y_value))), parameters[0], parameters[1]), label='Gauss distribution')
+            plt.ylabel('rel error in %')
+            plt.xlabel('events number')
+            # plt.scatter(range(len(df['rel_error'])), df['rel_error'], label='rel_error')
             plt.legend()
             plt.plot()
+            plt.title('rel error')
             plt.savefig(os.path.join(my_path, 'rel_error'))
+
+            plt.figure(num=2, figsize=(12, 6))
+            plt.clf()
+            y_value = my_target - my_output
+            # y_value = y_value[y_value < 2]
+            plt.scatter(range(len(y_value)), y_value.cpu(), label='rel_error no normalization')
+            
+            parameters, covariance = curve_fit(Gauss, np.array(range(len(y_value))), y_value.cpu())
+            plt.plot(range(len(y_value)), Gauss(np.array(range(len(y_value))), parameters[0], parameters[1]), label='Gauss distribution')
+            plt.ylabel('rel error : (target - output)')
+            plt.xlabel('events number')
+            # plt.scatter(range(len(df['rel_error'])), df['rel_error'], label='rel_error')
+            plt.legend()
+            plt.plot()
+            plt.title('rel error - no normalization')
+            plt.savefig(os.path.join(my_path, 'rel_error_no_normal'))
             
             loss = loss_fn(output, target)
             bias = output - target
@@ -156,6 +192,14 @@ def main(config):
 
 
 if __name__ == '__main__':
+    with open('./run.txt', 'r') as f:
+        run = int(f.read())
+    SEED = run
+    torch.manual_seed(SEED)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    np.random.seed(SEED)
+    random.seed(SEED)
     args = argparse.ArgumentParser(description='PyTorch Template')
     args.add_argument('-c', '--config', default=None, type=str,
                       help='config file path (default: None)')

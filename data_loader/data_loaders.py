@@ -1,11 +1,11 @@
 import random
 from collections import Counter
 from pathlib import Path
-
+from scipy.io import loadmat  
 import numpy as np
 import torch
 from torch.utils.data import Dataset
-
+import matplotlib.pyplot as plt
 from base import BaseDataLoader
 from data_loader import EcalDataIO
 
@@ -55,10 +55,22 @@ class Bin_energy_data(Dataset):
                  Also returns the num_showers and idx parameter for test purposes.
     """
 
-    def __init__(self, en_dep_file, en_file, moment=1, min_shower_num=0, max_shower_num=10000, file=0):
+    def __init__(self, en_dep_file, en_file, moment=1, min_shower_num=0, max_shower_num=10000, file=0, noise_file=None):
 
         self.en_dep = EcalDataIO.ecalmatio(en_dep_file)  # Dict with 100000 samples {(Z,X,Y):energy_stamp}
         self.energies = EcalDataIO.energymatio(en_file)
+
+        # my_keys = self.energies.keys()
+        # del_list = list()
+        # for key in my_keys:
+        #     if len(self.energies[key]) < 1000:
+        #         del_list.append(key)
+        # for key in del_list:
+        #     del self.en_dep[key]
+        #     del self.energies[key]
+
+        if noise_file is not None:
+            self.en_dep_noise = loadmat(noise_file)
         # self.energies = EcalDataIO.xymatio(en_file)
 
         self.moment = moment
@@ -164,6 +176,27 @@ class Bin_energy_data(Dataset):
             d_tens[x, y, z] = tmp[(z, x, y)]
         d_tens = d_tens.unsqueeze(0)  # Only in conv3d
 
+        key_noise = str(np.random.random_integers(999))
+
+        en_dep_noise = torch.zeros((110, 11, 21))
+        for i in range(en_dep_noise.shape[0]):
+            for j in range(en_dep_noise.shape[1]):
+                for k in range(en_dep_noise.shape[2]):
+                    en_dep_noise[i,j,k] = self.en_dep_noise[key_noise][k,i,j]
+        # plt.figure(num=0, figsize=(12, 6))
+        # plt.clf()
+        # plt.imshow(d_tens.sum(axis=2).squeeze(axis=0), interpolation="nearest", origin="upper", aspect="auto")
+        # plt.colorbar()
+        # plt.savefig('without_noise')
+
+        d_tens += en_dep_noise
+
+        # plt.figure(num=0, figsize=(12, 6))
+        # plt.clf()
+        # plt.imshow(en_dep_noise.sum(axis=2).squeeze(axis=0), interpolation="nearest", origin="upper", aspect="auto")
+        # plt.colorbar()
+        # plt.savefig('with_noise')
+
         en_list = torch.Tensor(self.energies[key])
         num_showers = len(en_list)
 
@@ -212,8 +245,12 @@ class Bin_energy_data(Dataset):
         num_classes = int(np.array(num_classes))
         hf.close()
         bin_num = num_classes
+
         final_list = [0] * bin_num  # The 20 here is the bin number - it may be changed of course.
-        bin_list = np.linspace(0, 13, bin_num)  # Generate the bin limits
+        
+        # bin_list = np.linspace(0, 13, bin_num)  # Generate the bin limits
+        bin_list = np.arange(0, 0.125*bin_num+0.125, 0.125) # 0.125 * 110 (classes) = 13.75
+        
         binplace = np.digitize(en_list, bin_list)  # Divide the list into bins
         bin_partition = Counter(binplace)  # Count the number of showers for each bin.
         for k in bin_partition.keys():
@@ -221,6 +258,12 @@ class Bin_energy_data(Dataset):
         n = sum(final_list)
         # final_list = [f / n for f in final_list]    # Bin Normalization by sum
         final_list = torch.Tensor(final_list)  # Wrap it in a tensor - important for training and testing.
+        
         #########################################
 
-        return d_tens, final_list, num_showers, idx
+        # final_list = torch.tensor([len(en_list)])
+
+        # print(final_list)
+
+        # return d_tens.sum(axis=2)[:,:,:10], final_list, num_showers, idx
+        return d_tens.sum(axis=2)[:,:,:], final_list, num_showers, idx
